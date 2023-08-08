@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+  application01:
+    image: dockersamples/static-site
+    container_name: application01
+    environment:
+      - AUTHOR="APPLICATION01"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://application01:80"]
+      interval: 1s
+      timeout: 3s
+      retries: 1
+
+  application02:
+    image: dockersamples/static-site
+    container_name: application02
+    environment:
+      - AUTHOR="APPLICATION02"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://application02:80"]
+      interval: 1s
+      timeout: 3s
+      retries: 1
+
+  application03:
+    image: dockersamples/static-site
+    container_name: application03
+    environment:
+      - AUTHOR="APPLICATION03"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://application03:80"]
+      interval: 1s
+      timeout: 3s
+      retries: 1
+
+  nginx_gateway:
+    image: nginx:1.19.6-alpine
+    container_name: nginx_gateway
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
+    depends_on:
+      - application01
+      - application02
+      - application03
